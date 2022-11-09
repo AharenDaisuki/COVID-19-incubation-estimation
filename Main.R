@@ -1,17 +1,24 @@
 source('CleanData.R')
+source('ModelingMLE.R')
+source('PlotUtils.R')
 
-main<-function(){
-  # modify file path name here
-  data = cleanData("/Users/lixiaoyang/insurance_charges_estimation/insurance.csv");
-  # print.data.frame(data);
-  nonsmokerData = subset.data.frame(data, smoker == 'no');
-  smokerData = subset.data.frame(data, smoker == 'yes');
-  # print.data.frame(nonsmokerData);
-  # print.data.frame(smokerData);
-  par(mfrow = c(1, 2))
-  hist(nonsmokerData$charges, main = 'nonsmoker', xlab = 'charge');
-  hist(smokerData$charges, main = 'smoker', xlab = 'charge');
-}
+ library(fitdistrplus)
 
-main()
+# clean data
+data = cleanData("/Users/lixiaoyang/insurance_charges_estimation/insurance.csv"); # modify file path name here
+nonsmokerData = subset.data.frame(data, smoker == 'no');
+smokerData = subset.data.frame(data, smoker == 'yes');
+
+# gamma modeling
+nsParams = fitGamma(nonsmokerData$charges);
+print(nsParams);
+fitdist(nonsmokerData$charges, 'gamma');
+sParams = fitGamma(smokerData$charges);
+print(sParams);
+summary(goodfit(smokerData$charges), 'gamma');
+
+# distribution
+par(mfrow = c(1, 2));
+pltGammaMetrics(nonsmokerData$charges, 'nonsmoker', nsParams, 20);
+pltGammaMetrics(smokerData$charges, 'smoker', sParams, 15)
 
