@@ -2,6 +2,8 @@ from sklearn import linear_model
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error as mse
+from sklearn.metrics import r2_score
+
 import numpy as np
 import math
 
@@ -17,6 +19,7 @@ ax.scatter(X['age'],X['bmi'],Y)
 plt.show()
 predict=regr.predict(X)
 residual=predict-Y
+print(r2_score(Y, predict))
 
 residual=residual/math.sqrt((mse(Y,predict)))
 
@@ -30,7 +33,7 @@ plt.show()
 regr.fit(X,Y)
 predict=regr.predict(X)
 residual=predict-Y
-print(residual)
+print(r2_score(Y, predict))
 
 # predict=pd.DataFrame(predict)
 # predict=pd.concat([predict,Y,X],axis=1)
