@@ -28,3 +28,14 @@ cleanData<-function(filePathName){
   phaseIII
 }
 
+cleanBadLeverage<-function(linearModel, data_){
+  leverage = hatvalues(linearModel)
+  stdResidual = rstandard(linearModel)
+  # residual = linearModel$residuals
+  leverageFlag = leverage > (4 / nrow(data_))
+  # leverageFlag = cooks.distance(linearModel) > (4/nrow(data_))
+  residualFlag = (stdResidual < -2 | stdResidual > 2)
+  data_[!leverageFlag & !residualFlag,]
+  # residualFlag = rstudent(linearModel) > 3
+}
+
