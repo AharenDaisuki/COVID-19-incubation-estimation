@@ -29,13 +29,9 @@ cleanData<-function(filePathName){
 }
 
 cleanBadLeverage<-function(linearModel, data_){
-  leverage = hatvalues(linearModel)
-  stdResidual = rstandard(linearModel)
-  # residual = linearModel$residuals
-  leverageFlag = leverage > (4 / nrow(data_))
-  # leverageFlag = cooks.distance(linearModel) > (4/nrow(data_))
-  residualFlag = (stdResidual < -2 | stdResidual > 2)
-  data_[!leverageFlag & !residualFlag,]
-  # residualFlag = rstudent(linearModel) > 3
+  tmp = data_
+  tmp$stdResidual = rstandard(linearModel)
+  tmp[(-2 < tmp$stdResidual & tmp$stdResidual < 2),]
+  #tmp
 }
 

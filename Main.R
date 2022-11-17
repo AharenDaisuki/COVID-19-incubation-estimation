@@ -2,25 +2,26 @@ source('CleanData.R')
 source('ModelingMLE.R')
 source('PlotUtils.R')
 source('LinearRegDiag.R')
+source('linearReg.R')
 
 library(ggplot2)
 
 # clean data
-data = cleanData("/Users/lixiaoyang/insurance_charges_estimation/insurance.csv"); # modify file path name here
-nonsmokerData = subset.data.frame(data, smoker == 'no');
-smokerData = subset.data.frame(data, smoker == 'yes');
+#data = cleanData("/Users/lixiaoyang/insurance_charges_estimation/insurance.csv"); # modify file path name here
+#nonsmokerData = subset.data.frame(data, smoker == 'no');
+#smokerData = subset.data.frame(data, smoker == 'yes');
 
 # gamma modeling
-nsParams = fitGamma(nonsmokerData$charges);
-print(nsParams);
+#nsParams = fitGamma(nonsmokerData$charges);
+#print(nsParams);
 
-sParams = fitGamma(smokerData$charges);
-print(sParams);
+#sParams = fitGamma(smokerData$charges);
+#print(sParams);
 
 # distribution
-par(mfrow = c(1, 2));
-pltGammaMetrics(nonsmokerData$charges, 'nonsmoker', nsParams, 20);
-pltGammaMetrics(smokerData$charges, 'smoker', sParams, 15)
+#par(mfrow = c(1, 2));
+#pltGammaMetrics(nonsmokerData$charges, 'nonsmoker', nsParams, 20);
+#pltGammaMetrics(smokerData$charges, 'smoker', sParams, 15)
 
 ## bmi ~ charges
 
@@ -28,33 +29,55 @@ pltGammaMetrics(smokerData$charges, 'smoker', sParams, 15)
 
 # nonsmoker
 # before
-orig = linearReg(nonsmokerData$age, nonsmokerData$charges, 'age', 'charges', 'nonsmoker', c(0, 35000))
-summary(orig)
-confint(orig, level = 0.95)
+#orig = linearReg(nonsmokerData$age, nonsmokerData$charges, 'age', 'charges', 'nonsmoker', c(0, 35000))
+#summary(orig)
+#confint(orig, level = 0.95)
 # remove bad leverage
-nonsmokerDataClean = cleanBadLeverage(orig, nonsmokerData)
+#nonsmokerDataClean = cleanBadLeverage(orig, nonsmokerData)
 # print(nrow(nonsmokerDataClean))
 # after
-curr = linearReg(nonsmokerDataClean$age, nonsmokerDataClean$charges, 'age', 'charges', 'nonsmoker', c(0, 35000))
-summary(curr)
-confint(curr, level = 0.95)
+#curr = linearReg(nonsmokerDataClean$age, nonsmokerDataClean$charges, 'age', 'charges', 'nonsmoker', c(0, 35000))
+#summary(curr)
+#confint(curr, level = 0.95)
 
 #res = rstandard(curr)
 #print(res)
 #plot(nonsmokerDataClean$age, res, xlab = 'age', ylab = 'residual', ylim = c(-2, 2))
 
 # smoker
-origS = linearReg(smokerData$age, smokerData$charges, 'age', 'charges', 'smoker', c(0, 50000))
-summary(origS)
-confint(origS, level = 0.95)
+#origS = linearReg(smokerData$age, smokerData$charges, 'age', 'charges', 'smoker', c(0, 50000))
+#summary(origS)
+#confint(origS, level = 0.95)
 # remove bad leverage
-smokerDataClean = cleanBadLeverage(origS, smokerData)
+#smokerDataClean = cleanBadLeverage(origS, smokerData)
 # print(nrow(smokerDataClean))
 # before
-currS = linearReg(smokerDataClean$age, smokerDataClean$charges, 'age', 'charges', 'smoker', c(0, 35000))
-summary(currS)
-confint(currS, level = 0.95)
+#currS = linearReg(smokerDataClean$age, smokerDataClean$charges, 'age', 'charges', 'smoker', c(0, 35000))
+#summary(currS)
+#confint(currS, level = 0.95)
 
 # res = rstandard(curr)
 # print(res)
 # plot(smokerDataClean$age, res, xlab = 'age', ylab = 'residual', ylim = c(-2, 2))
+
+# ************************************************************************
+allData = c(
+  '/Users/lixiaoyang/insurance_charges_estimation/dataset/TRSI.csv',
+  '/Users/lixiaoyang/insurance_charges_estimation/dataset/TRSII.csv',
+  '/Users/lixiaoyang/insurance_charges_estimation/dataset/TRNS.csv'
+)
+# linearRegression(allData[3])
+
+df = read.csv(file = allData[3])
+x = df$age # hard code
+y = df$charge # hard code
+linearModel = lm(y ~ x)
+summary(linearModel)
+pltLinearModel(linearModel)
+
+df = cleanBadLeverage(linearModel, df)
+x = df$age
+y = df$charge
+linearModel = lm(y ~ x)
+summary(linearModel)
+pltLinearModel(linearModel)

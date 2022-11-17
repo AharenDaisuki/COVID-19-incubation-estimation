@@ -23,3 +23,10 @@ pltGammaMetrics<-function(data_, title, params, binN){
 pltScatter<-function(x_, y_, xlabel, ylabel, main_, ylim_){
   plot(x_, y_, xlab = xlabel, ylab = ylabel, main = main_, ylim = ylim_);
 }
+
+pltLinearModel<-function(linearModel){
+  par(mfrow = c(2, 2))
+  plot(linearModel)
+  summary(linearModel)
+}
+
