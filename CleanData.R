@@ -28,3 +28,10 @@ cleanData<-function(filePathName){
   phaseIII
 }
 
+cleanBadLeverage<-function(linearModel, data_){
+  tmp = data_
+  tmp$stdResidual = rstandard(linearModel)
+  tmp[(-2 < tmp$stdResidual & tmp$stdResidual < 2),]
+  #tmp
+}
+
