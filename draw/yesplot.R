@@ -1,0 +1,10 @@
+a<-read.table("Trainno.csv",header=TRUE)
+attach(a)
+lmyes<-lm(charge~age)
+newx = seq(min(x),max(x),by = 0.05)
+conf_interval <- predict(lmyes, newdata=data.frame(x=newx), interval="confidence",
+                         level = 0.95)
+plot(x, y, xlab="x", ylab="y", main="Regression")
+abline(lm.out, col="lightblue")
+lines(newx, conf_interval[,2], col="blue", lty=2)
+lines(newx, conf_interval[,3], col="blue", lty=2)
